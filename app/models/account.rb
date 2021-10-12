@@ -16,19 +16,17 @@ class Account < ApplicationRecord
     settings.assertion_consumer_service_url = url_base + "/saml/acs"
     settings.assertion_consumer_logout_service_url = url_base + "/saml/logout"
 
-    onelogin_app_id = "<onelogin-app-id>"
-
     # IdP section
-    settings.idp_entity_id                  = "https://app.onelogin.com/saml/metadata/#{onelogin_app_id}"
-    settings.idp_sso_target_url             = "https://app.onelogin.com/trust/saml2/http-redirect/sso/#{onelogin_app_id}"
-    settings.idp_slo_target_url             = "https://app.onelogin.com/trust/saml2/http-redirect/slo/#{onelogin_app_id}"
-    settings.idp_cert                       = ""
+    settings.idp_entity_id                  = ENV['IDP_ENTITY_ID']
+    settings.idp_sso_target_url             = ENV['IDP_SSO_URL']
+    settings.idp_slo_target_url             = ENV['IDP_SLO_URL']
+    settings.idp_cert                       = File.read(Rails.root.join('config', 'rails-sso.cer'))
 
 
     # or settings.idp_cert_fingerprint           = ""
     #    settings.idp_cert_fingerprint_algorithm = XMLSecurity::Document::SHA1
 
-    settings.name_identifier_format         = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
+    settings.name_identifier_format         = ENV['NAME_ID_FORMAT']
 
     # Security section
     settings.security[:authn_requests_signed] = false
